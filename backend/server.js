@@ -40,8 +40,13 @@ app.use((req, res) => {
   res.status(404).json({ message: "Rota não encontrada" });
 });
 
-// Inicialização do servidor
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+// Exporta o app para ser usado em ambientes serverless (Vercel)
+module.exports = app;
+
+// Inicialização do servidor apenas em ambiente local (não Vercel)
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+  });
+}
 
