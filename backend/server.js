@@ -12,23 +12,33 @@ const app = express();
 
 // Configurações básicas
 const PORT = process.env.PORT || 3000;
-// Suporta múltiplas origens separadas por vírgula (ex.: produção + previews Vercel)
+// Suporta múltiplas origens separadas por vírgula; aceita também qualquer *.vercel.app
 const CORS_ORIGIN = process.env.CORS_ORIGIN || "*";
 const allowedOrigins = CORS_ORIGIN === "*"
   ? "*"
   : CORS_ORIGIN.split(",").map((o) => o.trim()).filter(Boolean);
 
+const isOriginAllowed = (origin) => {
+  if (!origin) return true;
+  if (allowedOrigins === "*") return true;
+  if (allowedOrigins.includes(origin)) return true;
+  // Permite qualquer preview/produção do Vercel (*.vercel.app)
+  try {
+    const url = new URL(origin);
+    if (url.hostname.endsWith(".vercel.app")) return true;
+  } catch (_) {}
+  return false;
+};
+
 app.use(
   cors({
-    origin: Array.isArray(allowedOrigins) && allowedOrigins.length
-      ? (origin, cb) => {
-          if (!origin || allowedOrigins.includes(origin)) {
-            cb(null, origin || true);
-          } else {
-            cb(null, false);
-          }
-        }
-      : CORS_ORIGIN,
+    origin: (origin, cb) => {
+      if (isOriginAllowed(origin)) {
+        cb(null, origin || true);
+      } else {
+        cb(null, false);
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
