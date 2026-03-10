@@ -1,8 +1,9 @@
-// Vercel serverless entrypoint for the Express app
-// Uses serverless-http so Express receives a proper Node-like req/res and
-// can handle OPTIONS preflight and CORS correctly.
-
-const serverless = require("serverless-http");
+// Vercel serverless entrypoint: todas as rotas /api e /api/* são enviadas aqui via
+// vercel.json (rewrite /api/:path* -> /api?path=:path*). O Express restaura req.url
+// no server.js e trata CORS + rotas normalmente.
 const app = require("../server");
 
-module.exports = serverless(app);
+module.exports = (req, res) => {
+  app(req, res);
+};
+

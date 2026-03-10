@@ -10,6 +10,18 @@ const errorHandler = require("./src/middleware/errorHandler.middleware");
 
 const app = express();
 
+// Restaura req.url quando a requisição vem de um rewrite do Vercel (api/:path* -> api?path=:path*)
+// para que o Express encaminhe corretamente para /api/users, /api/posts, etc.
+app.use((req, res, next) => {
+  const path = req.query.path;
+  if (path !== undefined) {
+    delete req.query.path;
+    const qs = Object.keys(req.query).length ? "?" + new URLSearchParams(req.query).toString() : "";
+    req.url = "/api" + (path ? "/" + path : "") + qs;
+  }
+  next();
+});
+
 // Configurações básicas
 const PORT = process.env.PORT || 3000;
 // Suporta múltiplas origens separadas por vírgula; aceita também qualquer *.vercel.app
