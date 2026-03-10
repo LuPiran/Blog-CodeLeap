@@ -12,12 +12,26 @@ const app = express();
 
 // Configurações básicas
 const PORT = process.env.PORT || 3000;
+// Suporta múltiplas origens separadas por vírgula (ex.: produção + previews Vercel)
 const CORS_ORIGIN = process.env.CORS_ORIGIN || "*";
+const allowedOrigins = CORS_ORIGIN === "*"
+  ? "*"
+  : CORS_ORIGIN.split(",").map((o) => o.trim()).filter(Boolean);
 
 app.use(
   cors({
-    origin: CORS_ORIGIN,
+    origin: Array.isArray(allowedOrigins) && allowedOrigins.length
+      ? (origin, cb) => {
+          if (!origin || allowedOrigins.includes(origin)) {
+            cb(null, origin || true);
+          } else {
+            cb(null, false);
+          }
+        }
+      : CORS_ORIGIN,
     credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 app.use(express.json());

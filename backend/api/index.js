@@ -1,11 +1,8 @@
 // Vercel serverless entrypoint for the Express app
-// This file is used when the backend project is deployed with root = backend
-// on Vercel. It forwards all /api/* requests to the Express app defined in
-// server.js.
+// Uses serverless-http so Express receives a proper Node-like req/res and
+// can handle OPTIONS preflight and CORS correctly.
 
+const serverless = require("serverless-http");
 const app = require("../server");
 
-module.exports = (req, res) => {
-  app(req, res);
-};
-
+module.exports = serverless(app);
