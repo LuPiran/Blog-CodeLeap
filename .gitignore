@@ -1,0 +1,25 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+# Dependências
+backend/node_modules
+frontend/node_modules
+# Builds / artefatos
+backend/dist
+frontend/dist
+# Ambiente
+backend/.env
+frontend/.env
+# Sistema/IDE
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+# Vercel / outras plataformas
+.vercel
+# Arquivos de cache
+*.swp
+*.swo
