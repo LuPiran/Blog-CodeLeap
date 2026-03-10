@@ -3,7 +3,7 @@
 BlueWave Blog is a full-stack blog platform where users can create, edit and delete their own posts, upload images, like posts and comments, and reply to comments.  
 The project is built with **React + Vite + Tailwind CSS** on the frontend, **Node.js + Express** on the backend and uses **Supabase** for authentication, database and storage.
 
-URL Site: https://blog-code-leap-dhdf7durm-lucas-pirans-projects.vercel.app/login
+URL Site: https://blog-code-leap.vercel.app/
 
 
 ## Features
